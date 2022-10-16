@@ -22,9 +22,6 @@ flake8:
 mypy:
 	$(VENV)/bin/mypy $(ALL)
 
-pylint:
-	$(VENV)/bin/pylint --jobs $(JOBS) --rcfile=setup.cfg $(CODE)
-
 lint: black flake8 mypy
 
 pretty:
