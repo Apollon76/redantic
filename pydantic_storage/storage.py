@@ -49,5 +49,5 @@ class RedisDict(Generic[ValueType]):
             raise KeyError()
         return deserialize(data, self._t)
 
-    def __setitem__(self, key: Serializable, value: ValueType):
+    def __setitem__(self, key: Serializable, value: ValueType) -> None:
         self._client.set(serialize(key), serialize(value))
