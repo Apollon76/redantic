@@ -1,10 +1,13 @@
-from typing import Generic, TypeVar, Type, Any, Union
+import struct
+from typing import Generic, Type, TypeVar, Union
 
 from pydantic import BaseModel
 from redis import Redis
 
+Serializable = Union[bytes, str, int, float, BaseModel]
 
-def serialize(entity) -> bytes:
+
+def serialize(entity: Serializable) -> bytes:
     if isinstance(entity, BaseModel):
         return entity.json().encode('utf-8')
     if isinstance(entity, str):
@@ -13,10 +16,15 @@ def serialize(entity) -> bytes:
         return entity
     if isinstance(entity, int):
         return bytes(entity)
-    return entity
+    if isinstance(entity, float):
+        return struct.pack("d", entity)
+    raise ValueError('Unknown type')
 
 
-def deserialize(entity: bytes, t: Type[Any]):
+ValueType = TypeVar('ValueType', bound=Serializable)
+
+
+def deserialize(entity: bytes, t: Type[ValueType]) -> ValueType:
     if issubclass(t, bytes):
         return t(entity)
     if issubclass(t, str):
@@ -25,12 +33,9 @@ def deserialize(entity: bytes, t: Type[Any]):
         return t(entity)
     if issubclass(t, BaseModel):
         return t.parse_raw(entity)
+    if issubclass(t, float):
+        return struct.unpack('d', entity)[0]
     raise TypeError()
-
-
-Serializable = Union[bytes, str, int, float, BaseModel]
-
-ValueType = TypeVar('ValueType')
 
 
 class RedisDict(Generic[ValueType]):
@@ -57,9 +62,10 @@ def main():
     # print(RedisDict[A].__args__)
     # return
     d = RedisDict[A](Redis(), A)
-    d['asdf'] = A(x=1, y='kek')
-    print(d['asdf'])
-    print(d['lol'])
+    d[5.1] = A(x=1, y='kek')
+    print(d[5.1])
+    # print(d['lol'])
+
 
 if __name__ == '__main__':
     main()

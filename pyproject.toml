@@ -12,6 +12,12 @@ pydantic = "^1.10.2"
 redis = "^4.3.4"
 
 
+[tool.poetry.group.dev.dependencies]
+mypy = "^0.982"
+black = "^22.10.0"
+flake8 = "^5.0.4"
+isort = "^5.10.1"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
