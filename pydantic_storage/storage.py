@@ -26,20 +26,20 @@ ValueType = TypeVar('ValueType', bound=Serializable)
 
 def deserialize(entity: bytes, t: Type[ValueType]) -> ValueType:
     if issubclass(t, bytes):
-        return t(entity)
+        return t(entity)  # type: ignore
     if issubclass(t, str):
-        return t(entity.decode('utf-8'))
+        return t(entity.decode('utf-8'))  # type: ignore
     if issubclass(t, int):
-        return t(entity.decode('utf-8'))
+        return t(entity.decode('utf-8'))  # type: ignore
     if issubclass(t, BaseModel):
-        return t.parse_raw(entity)
+        return t.parse_raw(entity)  # type: ignore
     if issubclass(t, float):
-        return struct.unpack('d', entity)[0]
+        return struct.unpack('d', entity)[0]  # type: ignore
     raise TypeError()
 
 
 class RedisDict(Generic[ValueType]):
-    def __init__(self, client: Redis, t: Type[ValueType]):
+    def __init__(self, client: Redis, t: Type[ValueType]):  # type: ignore
         self._client = client
         self._t = t
 

@@ -20,7 +20,7 @@ flake8:
 	$(VENV)/bin/flake8 --jobs $(JOBS) --statistics --show-source $(ALL)
 
 mypy:
-	$(VENV)/bin/mypy $(ALL)
+	$(VENV)/bin/mypy --install-types $(ALL)
 
 lint: black flake8 mypy
 
