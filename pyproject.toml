@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "pydantic-storage"
+version = "0.1.0"
+description = ""
+authors = ["apollon <Apollon76@yandex.ru>"]
+readme = "README.md"
+packages = [{include = "pydantic_storage"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
