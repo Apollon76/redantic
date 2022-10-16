@@ -8,6 +8,8 @@ packages = [{include = "pydantic_storage"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+pydantic = "^1.10.2"
+redis = "^4.3.4"
 
 
 [build-system]
