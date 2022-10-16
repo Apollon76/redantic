@@ -15,7 +15,7 @@ def serialize(entity: Serializable) -> bytes:
     if isinstance(entity, bytes):
         return entity
     if isinstance(entity, int):
-        return bytes(entity)
+        return str(entity).encode('utf-8')
     if isinstance(entity, float):
         return struct.pack("d", entity)
     raise ValueError('Unknown type')
@@ -30,7 +30,7 @@ def deserialize(entity: bytes, t: Type[ValueType]) -> ValueType:
     if issubclass(t, str):
         return t(entity.decode('utf-8'))
     if issubclass(t, int):
-        return t(entity)
+        return t(entity.decode('utf-8'))
     if issubclass(t, BaseModel):
         return t.parse_raw(entity)
     if issubclass(t, float):
@@ -51,21 +51,3 @@ class RedisDict(Generic[ValueType]):
 
     def __setitem__(self, key: Serializable, value: ValueType):
         self._client.set(serialize(key), serialize(value))
-
-
-class A(BaseModel):
-    x: int
-    y: str
-
-
-def main():
-    # print(RedisDict[A].__args__)
-    # return
-    d = RedisDict[A](Redis(), A)
-    d[5.1] = A(x=1, y='kek')
-    print(d[5.1])
-    # print(d['lol'])
-
-
-if __name__ == '__main__':
-    main()
