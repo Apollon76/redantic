@@ -70,8 +70,8 @@ class RedisDict(MutableMapping[KeyType, ValueType]):
     # def update(self, *args, **kwargs):
     #     return self.__dict__.update(*args, **kwargs)
 
-    # def keys(self):
-    #     return self._client.hkeys(self._name)
+    # def keys(self) -> Iterator[KeyType]:
+    #     return iter(self)
 
     # def values(self) -> list[ValueType]:
     #     return self._client.hgetall(self._name)
