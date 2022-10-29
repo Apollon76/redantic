@@ -52,3 +52,33 @@ class RedisDict(Generic[ValueType]):
 
     def __setitem__(self, key: Serializable, value: ValueType) -> None:
         self._client.hset(self._name, serialize(key), serialize(value))
+
+    def __len__(self) -> int:
+        return self._client.hlen(self._name)
+
+    def __delitem__(self, key: Serializable) -> None:
+        self._client.hdel(self._name, serialize(key))
+
+    def clear(self):
+        self._client.delete(self._name)
+
+    # def update(self, *args, **kwargs):
+    #     return self.__dict__.update(*args, **kwargs)
+
+    # def keys(self):
+    #     return self._client.hkeys(self._name)
+
+    def values(self) -> list[ValueType]:
+        return self._client.hgetall(self._name)
+
+    # def items(self):
+    #     return self.__dict__.items()
+
+    # def pop(self, *args):
+    #     return self.__dict__.pop(*args)
+
+    def __contains__(self, item: Serializable) -> bool:
+        return self._client.hexists(self._name, serialize(item))
+
+    # def __iter__(self):
+    #     return iter(self.__dict__)
