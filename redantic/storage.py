@@ -67,21 +67,9 @@ class RedisDict(MutableMapping[KeyType, ValueType]):
     def clear(self) -> None:
         self._client.delete(self._name)
 
-    # def update(self, *args, **kwargs):
-    #     return self.__dict__.update(*args, **kwargs)
-
-    # def keys(self) -> Iterator[KeyType]:
-    #     return iter(self)
-
-    # def values(self) -> list[ValueType]:
-    #     return self._client.hgetall(self._name)
-
     def items(self) -> tuple[KeyType, ValueType]:
         for key, value in self._client.hscan_iter(name=self._name):
             yield deserialize(key, t=self._key_type), deserialize(value, t=self._t)
-
-    # def pop(self, *args):
-    #     return self.__dict__.pop(*args)
 
     def __contains__(self, item: Serializable) -> bool:
         return self._client.hexists(self._name, serialize(item))
