@@ -1,6 +1,5 @@
 import struct
-from collections.abc import Mapping
-from typing import Generic, Type, TypeVar, Union, Iterator
+from typing import Iterator, MutableMapping, Type, TypeVar, Union
 
 from pydantic import BaseModel
 from redis import Redis
@@ -40,7 +39,7 @@ def deserialize(entity: bytes, t: Type[ValueType]) -> ValueType:
     raise TypeError()
 
 
-class RedisDict(Mapping[KeyType, ValueType]):
+class RedisDict(MutableMapping[KeyType, ValueType]):
     def __init__(self, client: Redis, name: str, key_type: Type[KeyType], value_type: Type[ValueType]):  # type: ignore
         self._client = client
         self._name = name
@@ -60,7 +59,8 @@ class RedisDict(Mapping[KeyType, ValueType]):
         return self._client.hlen(self._name)
 
     def __iter__(self) -> Iterator[KeyType]:
-        return (deserialize(e, t=self._key_type) for e in self._client.hkeys(name=self._name))
+        return (deserialize(e, t=self._key_type) for e, _ in self._client.hscan_iter(name=self._name))
+        # return (deserialize(e, t=self._key_type) for e in self._client.hkeys(name=self._name))
 
     def __delitem__(self, key: Serializable) -> None:
         self._client.hdel(self._name, serialize(key))
@@ -85,6 +85,3 @@ class RedisDict(Mapping[KeyType, ValueType]):
 
     def __contains__(self, item: Serializable) -> bool:
         return self._client.hexists(self._name, serialize(item))
-
-    # def __iter__(self):
-    #     return iter(self.__dict__)

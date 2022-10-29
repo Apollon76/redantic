@@ -66,3 +66,10 @@ def test_clear(sample_dict: RedisDict):
     assert len(d) == 1
     d.clear()
     assert len(d) == 0
+
+
+def test_iter(sample_dict: RedisDict):
+    d = sample_dict
+    d[1] = ValueModel(x=1, y=1.1, s='kek')
+    d[2] = ValueModel(x=1, y=1.2, s='lol')
+    assert set(d) == {1, 2}
