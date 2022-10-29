@@ -49,3 +49,5 @@ def test_len(client: Redis):
     d[1] = ValueModel(x=1, y=1.1, s='kek')
     d[2] = ValueModel(x=1, y=1.2, s='lol')
     assert len(d) == 2
+    del d[1]
+    assert len(d) == 1
