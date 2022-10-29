@@ -10,6 +10,10 @@ def client():
     return Redis()
 
 
+@pytest.fixture(autouse=True)
+def drop_redis(client: Redis) -> None:
+    client.flushdb()
+
 class KeyModel(BaseModel):
     data: str
     ind: int
@@ -34,5 +38,7 @@ class ValueModel(BaseModel):
 )
 def test_get_set(key, value, t, client: Redis):
     d = RedisDict[t](client=client, name='test_collection', t=t)
+    assert (key not in d) is True
     d[key] = value
     assert d[key] == value
+    assert (key in d) is True
