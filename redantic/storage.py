@@ -39,15 +39,16 @@ def deserialize(entity: bytes, t: Type[ValueType]) -> ValueType:
 
 
 class RedisDict(Generic[ValueType]):
-    def __init__(self, client: Redis, t: Type[ValueType]):  # type: ignore
+    def __init__(self, client: Redis, name: str, t: Type[ValueType]):  # type: ignore
         self._client = client
+        self._name = name
         self._t = t
 
     def __getitem__(self, item: Serializable) -> ValueType:
-        data = self._client.get(serialize(item))
+        data = self._client.hget(self._name, serialize(item))
         if data is None:
             raise KeyError()
         return deserialize(data, self._t)
 
     def __setitem__(self, key: Serializable, value: ValueType) -> None:
-        self._client.set(serialize(key), serialize(value))
+        self._client.hset(self._name, serialize(key), serialize(value))

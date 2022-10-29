@@ -33,6 +33,6 @@ class ValueModel(BaseModel):
     ],
 )
 def test_get_set(key, value, t, client: Redis):
-    d = RedisDict[t](client=client, t=t)
+    d = RedisDict[t](client=client, name='test_collection', t=t)
     d[key] = value
     assert d[key] == value
