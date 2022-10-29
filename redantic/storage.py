@@ -60,7 +60,6 @@ class RedisDict(MutableMapping[KeyType, ValueType]):
 
     def __iter__(self) -> Iterator[KeyType]:
         return (deserialize(e, t=self._key_type) for e, _ in self._client.hscan_iter(name=self._name))
-        # return (deserialize(e, t=self._key_type) for e in self._client.hkeys(name=self._name))
 
     def __delitem__(self, key: Serializable) -> None:
         self._client.hdel(self._name, serialize(key))
@@ -77,8 +76,9 @@ class RedisDict(MutableMapping[KeyType, ValueType]):
     # def values(self) -> list[ValueType]:
     #     return self._client.hgetall(self._name)
 
-    # def items(self):
-    #     return self.__dict__.items()
+    def items(self) -> tuple[KeyType, ValueType]:
+        for key, value in self._client.hscan_iter(name=self._name):
+            yield deserialize(key, t=self._key_type), deserialize(value, t=self._t)
 
     # def pop(self, *args):
     #     return self.__dict__.pop(*args)

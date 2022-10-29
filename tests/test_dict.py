@@ -70,6 +70,11 @@ def test_clear(sample_dict: RedisDict):
 
 def test_iter(sample_dict: RedisDict):
     d = sample_dict
-    d[1] = ValueModel(x=1, y=1.1, s='kek')
-    d[2] = ValueModel(x=1, y=1.2, s='lol')
+    expected = [(1, ValueModel(x=1, y=1.1, s='kek')), (2, ValueModel(x=1, y=1.2, s='lol'))]
+    for key, value in expected:
+        d[key] = value
     assert set(d) == {1, 2}
+    actual = list(d.items())
+    assert len(actual) == len(expected)
+    for e in expected:
+        assert e in actual
