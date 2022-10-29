@@ -42,3 +42,10 @@ def test_get_set(key, value, t, client: Redis):
     d[key] = value
     assert d[key] == value
     assert (key in d) is True
+
+def test_len(client: Redis):
+    d = RedisDict[ValueModel](client=client, name='test_collection', t=ValueModel)
+    assert len(d) == 0
+    d[1] = ValueModel(x=1, y=1.1, s='kek')
+    d[2] = ValueModel(x=1, y=1.2, s='lol')
+    assert len(d) == 2
