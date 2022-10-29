@@ -1,5 +1,6 @@
 import struct
-from typing import Generic, Type, TypeVar, Union
+from collections.abc import Mapping
+from typing import Generic, Type, TypeVar, Union, Iterator
 
 from pydantic import BaseModel
 from redis import Redis
@@ -21,6 +22,7 @@ def serialize(entity: Serializable) -> bytes:
     raise ValueError('Unknown type')
 
 
+KeyType = TypeVar('KeyType', bound=Serializable)
 ValueType = TypeVar('ValueType', bound=Serializable)
 
 
@@ -38,11 +40,12 @@ def deserialize(entity: bytes, t: Type[ValueType]) -> ValueType:
     raise TypeError()
 
 
-class RedisDict(Generic[ValueType]):
-    def __init__(self, client: Redis, name: str, t: Type[ValueType]):  # type: ignore
+class RedisDict(Mapping[KeyType, ValueType]):
+    def __init__(self, client: Redis, name: str, key_type: Type[KeyType], value_type: Type[ValueType]):  # type: ignore
         self._client = client
         self._name = name
-        self._t = t
+        self._key_type = key_type
+        self._t = value_type
 
     def __getitem__(self, item: Serializable) -> ValueType:
         data = self._client.hget(self._name, serialize(item))
@@ -56,6 +59,9 @@ class RedisDict(Generic[ValueType]):
     def __len__(self) -> int:
         return self._client.hlen(self._name)
 
+    def __iter__(self) -> Iterator[KeyType]:
+        return (deserialize(e, t=self._key_type) for e in self._client.hkeys(name=self._name))
+
     def __delitem__(self, key: Serializable) -> None:
         self._client.hdel(self._name, serialize(key))
 
@@ -68,8 +74,8 @@ class RedisDict(Generic[ValueType]):
     # def keys(self):
     #     return self._client.hkeys(self._name)
 
-    def values(self) -> list[ValueType]:
-        return self._client.hgetall(self._name)
+    # def values(self) -> list[ValueType]:
+    #     return self._client.hgetall(self._name)
 
     # def items(self):
     #     return self.__dict__.items()

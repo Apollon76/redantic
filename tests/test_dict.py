@@ -28,7 +28,7 @@ class ValueModel(BaseModel):
 
 @pytest.fixture()
 def sample_dict(client: Redis) -> RedisDict[ValueModel]:
-    return RedisDict[ValueModel](client=client, name='test_collection', t=ValueModel)
+    return RedisDict[ValueModel](client=client, name='test_collection', key_type=int, value_type=ValueModel)
 
 
 @pytest.mark.parametrize('key', [1, 5.1, 'kek', b'lol', KeyModel(data='kek', ind=1)])
@@ -43,7 +43,7 @@ def sample_dict(client: Redis) -> RedisDict[ValueModel]:
     ],
 )
 def test_get_set(key, value, t, client: Redis):
-    d = RedisDict[t](client=client, name='test_collection', t=t)
+    d = RedisDict[type(key), t](client=client, name='test_collection', key_type=type(key), value_type=t)
     assert (key not in d) is True
     d[key] = value
     assert d[key] == value
