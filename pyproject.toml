@@ -1,10 +1,10 @@
 [tool.poetry]
-name = "pydantic-storage"
+name = "redantic"
 version = "0.1.0"
 description = ""
 authors = ["apollon <Apollon76@yandex.ru>"]
 readme = "README.md"
-packages = [{include = "pydantic_storage"}]
+packages = [{include = "redantic"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -12,7 +12,7 @@ pydantic = "^1.10.2"
 redis = "^4.3.4"
 
 
-[tool.poetry.group.dev.dependencies]
+[tool.poetry.dev-dependencies]
 mypy = "^0.982"
 black = "^22.10.0"
 flake8 = "^5.0.4"

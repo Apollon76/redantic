@@ -2,7 +2,7 @@ import pytest
 from pydantic import BaseModel
 from redis.client import Redis
 
-from pydantic_storage.storage import RedisDict
+from redantic.storage import RedisDict
 
 
 @pytest.fixture()

@@ -3,7 +3,7 @@
 VENV ?= venv
 PYTHON ?= python3.10
 TESTS ?= tests
-CODE ?= pydantic_storage
+CODE ?= redantic
 ALL = $(CODE) $(TESTS)
 JOBS ?= 4
 
