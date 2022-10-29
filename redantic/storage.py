@@ -64,7 +64,7 @@ class RedisDict(MutableMapping[KeyType, ValueType]):
     def __delitem__(self, key: Serializable) -> None:
         self._client.hdel(self._name, serialize(key))
 
-    def clear(self):
+    def clear(self) -> None:
         self._client.delete(self._name)
 
     # def update(self, *args, **kwargs):
