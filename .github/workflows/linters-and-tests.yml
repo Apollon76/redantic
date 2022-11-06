@@ -23,7 +23,5 @@ jobs:
       run: make venv
     - name: Lint
       run: make lint
-    - name: docker-compose
-      run: docker-compose up -d
     - name: run tests
       run: make tests

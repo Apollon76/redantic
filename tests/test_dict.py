@@ -1,4 +1,5 @@
 import pytest
+from fakeredis import FakeStrictRedis
 from pydantic import BaseModel
 from redis.client import Redis
 
@@ -7,7 +8,7 @@ from redantic.storage import RedisDict
 
 @pytest.fixture()
 def client():
-    return Redis()
+    return FakeStrictRedis()
 
 
 @pytest.fixture(autouse=True)
