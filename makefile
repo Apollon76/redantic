@@ -1,6 +1,6 @@
 .PHONY : venv black flake9 mypy pylint lint pretty tests
 
-VENV ?= .venv
+VENV ?= venv
 PYTHON ?= python3.10
 TESTS ?= tests
 CODE ?= redantic
@@ -20,7 +20,7 @@ flake8:
 	$(VENV)/bin/flake8 --jobs $(JOBS) --statistics --show-source $(ALL)
 
 mypy:
-	$(VENV)/bin/mypy --install-types $(ALL)
+	$(VENV)/bin/mypy --install-types $(CODE)
 
 lint: black flake8 mypy
 

@@ -27,8 +27,8 @@ class ValueModel(BaseModel):
 
 
 @pytest.fixture()
-def sample_dict(client: Redis) -> RedisDict[ValueModel]:
-    return RedisDict[ValueModel](client=client, name='test_collection', key_type=int, value_type=ValueModel)
+def sample_dict(client: Redis) -> RedisDict[int, ValueModel]:
+    return RedisDict[int, ValueModel](client=client, name='test_collection', key_type=int, value_type=ValueModel)
 
 
 @pytest.mark.parametrize('key', [1, 5.1, 'kek', b'lol', KeyModel(data='kek', ind=1)])
@@ -50,7 +50,7 @@ def test_get_set(key, value, t, client: Redis):
     assert (key in d) is True
 
 
-def test_len(sample_dict: RedisDict[ValueModel]):
+def test_len(sample_dict: RedisDict[int, ValueModel]):
     d = sample_dict
     assert len(d) == 0
     d[1] = ValueModel(x=1, y=1.1, s='kek')
@@ -60,7 +60,7 @@ def test_len(sample_dict: RedisDict[ValueModel]):
     assert len(d) == 1
 
 
-def test_clear(sample_dict: RedisDict):
+def test_clear(sample_dict: RedisDict[int, ValueModel]):
     d = sample_dict
     d[KeyModel(data='asdf', ind=1)] = ValueModel(x=1, y=1.1, s='kek')
     assert len(d) == 1
@@ -68,13 +68,9 @@ def test_clear(sample_dict: RedisDict):
     assert len(d) == 0
 
 
-def test_iter(sample_dict: RedisDict):
+def test_iter(sample_dict: RedisDict[int, ValueModel]):
     d = sample_dict
     expected = [(1, ValueModel(x=1, y=1.1, s='kek')), (2, ValueModel(x=1, y=1.2, s='lol'))]
     for key, value in expected:
         d[key] = value
     assert set(d) == {1, 2}
-    actual = list(d.items())
-    assert len(actual) == len(expected)
-    for e in expected:
-        assert e in actual
