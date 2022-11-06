@@ -1,6 +1,6 @@
 .PHONY : venv black flake9 mypy pylint lint pretty tests
 
-VENV ?= venv
+VENV ?= .venv
 PYTHON ?= python3.10
 TESTS ?= tests
 CODE ?= redantic
