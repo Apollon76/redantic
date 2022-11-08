@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "redantic"
-version = "0.1.0"
-description = ""
+version = "0.1.1"
+description = "Simple redis storage for pydantic objects with an interface of the MutableMapping."
 authors = ["apollon <Apollon76@yandex.ru>"]
 readme = "README.md"
 packages = [{include = "redantic"}]
