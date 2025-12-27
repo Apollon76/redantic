@@ -1,7 +1,7 @@
 .PHONY : venv black flake9 mypy pylint lint pretty tests
 
-VENV ?= venv
-PYTHON ?= python3.10
+VENV ?= .venv
+PYTHON ?= python3.12
 TESTS ?= tests
 CODE ?= redantic
 ALL = $(CODE) $(TESTS)
