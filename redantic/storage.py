@@ -27,15 +27,15 @@ ValueType = TypeVar('ValueType', bound=Serializable)
 
 def deserialize(entity: bytes, t: Type[ValueType]) -> ValueType:
     if issubclass(t, bytes):
-        return t(entity)  # type: ignore
+        return t(entity)
     if issubclass(t, str):
-        return t(entity.decode('utf-8'))  # type: ignore
+        return t(entity.decode('utf-8'))
     if issubclass(t, int):
-        return t(entity.decode('utf-8'))  # type: ignore
+        return t(entity.decode('utf-8'))
     if issubclass(t, BaseModel):
-        return t.model_validate_json(entity)  # type: ignore
+        return t.model_validate_json(entity)
     if issubclass(t, float):
-        return struct.unpack('d', entity)[0]  # type: ignore
+        return struct.unpack('d', entity)[0]  # type: ignore[no-any-return]
     raise TypeError()
 
 
