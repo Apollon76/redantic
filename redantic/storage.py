@@ -9,33 +9,33 @@ Serializable = Union[bytes, str, int, float, BaseModel]
 
 def serialize(entity: Serializable) -> bytes:
     if isinstance(entity, BaseModel):
-        return entity.json().encode('utf-8')
+        return entity.model_dump_json().encode("utf-8")
     if isinstance(entity, str):
-        return entity.encode('utf-8')
+        return entity.encode("utf-8")
     if isinstance(entity, bytes):
         return entity
     if isinstance(entity, int):
-        return str(entity).encode('utf-8')
+        return str(entity).encode("utf-8")
     if isinstance(entity, float):
         return struct.pack("d", entity)
-    raise ValueError('Unknown type')
+    raise ValueError("Unknown type")
 
 
-KeyType = TypeVar('KeyType', bound=Serializable)
-ValueType = TypeVar('ValueType', bound=Serializable)
+KeyType = TypeVar("KeyType", bound=Serializable)
+ValueType = TypeVar("ValueType", bound=Serializable)
 
 
 def deserialize(entity: bytes, t: Type[ValueType]) -> ValueType:
     if issubclass(t, bytes):
-        return t(entity)  # type: ignore
+        return t(entity)
     if issubclass(t, str):
-        return t(entity.decode('utf-8'))  # type: ignore
+        return t(entity.decode("utf-8"))
     if issubclass(t, int):
-        return t(entity.decode('utf-8'))  # type: ignore
+        return t(entity.decode("utf-8"))
     if issubclass(t, BaseModel):
-        return t.parse_raw(entity)  # type: ignore
+        return t.model_validate_json(entity)
     if issubclass(t, float):
-        return struct.unpack('d', entity)[0]  # type: ignore
+        return struct.unpack("d", entity)[0]  # type: ignore
     raise TypeError()
 
 
